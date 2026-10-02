@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday My Love</title>
+    
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Patrick+Hand&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Font Definitions */
+        .font-handwriting { font-family: 'Patrick Hand', cursive; }
+        .font-cursive { font-family: 'Great Vibes', cursive; }
+        .font-sans { font-family: 'Inter', sans-serif; }
+
+        body {
+            /* Latar belakang utama menggunakan foto */
+            background-image: url('image_661f57.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            margin: 0;
+            color: #831843; /* Pink-900 */
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Latar foto layar pembuka, tetap menutupi halaman di belakangnya */
+        .intro-bg {
+            background-color: #e5e7eb;
+            background-image: url('https://cdn.discordapp.com/attachments/1520075033740054590/1555048553074659428/IMG_2681.HEIC.jpg?backend=b2&ex=6abf1b52&is=6abdc9d2&hm=c4d874872a2b980f34e1735258afe79ead317667aae67e12d776e0f3156d6755&');
+            background-size: cover;
+            background-position: ;
+            background-repeat: no-repeat;
+        }
+
+        .intro-title-backdrop {
+            padding: 0.75rem 1.5rem;
+            border-radius: 1.25rem;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        /* Glassmorphism Panel Utama */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 12px 40px 0 rgba(236, 72, 153, 0.2); 
+            border-radius: 1.5rem;
+        }
+
+        /* Efek Interaktif Tombol Menu */
+        .glass-button {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(8px);
+            border: 2px solid rgba(244, 114, 182, 0.4); 
+            transition: all 0.3s ease;
+        }
+        .glass-button:hover {
+            background: rgba(252, 211, 227, 0.9); /* Pink-200 transparan */
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 15px 30px -5px rgba(236, 72, 153, 0.5);
+            border-color: rgba(244, 114, 182, 0.8);
+        }
+
+        /* Animasi Detak Jantung */
+        .heartbeat {
+            animation: beat 1.2s infinite;
+        }
+        @keyframes beat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        /* Animasi Pop-up Modal (Bounce & Fade In) */
+        .modal-enter {
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.8) translateY(30px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* Efek Hover Polaroid */
+        .polaroid {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px 10px 35px 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            border-radius: 4px;
+            display: inline-block;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .polaroid:hover {
+            transform: scale(1.08) rotate(0deg) !important;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+
+        /* Intro Screen Transition */
+        .intro-hidden {
+            opacity: 0;
+            visibility: hidden;
+            transition: none;
+        }
+    </style>
+</head>
+<body class="font-handwriting">
+
+    <!-- YOUTUBE PLAYER & FLOATING BUTTON -->
+    <div id="youtube-player" class="absolute w-0 h-0 -left-full overflow-hidden"></div>
+    <button id="music-toggle" onclick="window.toggleMusic()" class="fixed top-6 right-6 z-40 bg-white/60 backdrop-blur-md border border-pink-300 text-pink-700 w-12 h-12 rounded-full flex items-center justify-center text-2xl shadow-lg hover:bg-pink-100 hover:scale-110 transition-all opacity-0 pointer-events-none" title="Matikan/Nyalakan Musik">
+        🔇
+    </button>
+
+    <!-- ========================================== -->
+    <!-- INTRO SCREEN (Halaman Amplop Awal) -->
+    <!-- ========================================== -->
+    <div id="intro-screen" class="fixed inset-0 z-50 intro-bg flex flex-col items-center justify-center">
+        
+        <!-- Teks Kaligrafi -->
+        <div class="intro-title-backdrop text-center mb-12">
+            <h1 class="font-cursive text-7xl md:text-8xl text-black leading-tight drop-shadow-sm">Happy Birthday</h1>
+            <h2 class="font-cursive text-6xl md:text-7xl text-red-800 -mt-2 drop-shadow-sm">My Love</h2>
+        </div>
+
+        <!-- Ilustrasi Amplop 3D (Lebih Realistis) -->
+        <div class="mb-16 transform hover:scale-105 transition-transform duration-300 relative">
+            <svg width="240" height="160" viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
+                <!-- Drop Shadow Filter -->
+                <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+                    <feDropShadow dx="3" dy="8" stdDeviation="5" flood-color="#000" flood-opacity="0.3"/>
+                </filter>
+                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#be185d" flood-opacity="0.4"/>
+                </filter>
+                
+                <!-- Body Amplop (Belakang) -->
+                <rect x="10" y="15" width="180" height="105" fill="#fbcfe8" filter="url(#shadow)" rx="4"/>
+                
+                <!-- Lipatan Samping (Pink Sedang) -->
+                <polygon points="10,15 95,70 10,120" fill="#f9a8d4"/>
+                <polygon points="190,15 105,70 190,120" fill="#f9a8d4"/>
+                
+                <!-- Lipatan Bawah (Pink Agak Gelap) -->
+                <polygon points="10,120 100,65 190,120" fill="#f472b6"/>
+                
+                <!-- Lipatan Atas (Flap yang tertutup - Pink Terang) -->
+                <polygon points="10,15 100,75 190,15" fill="#fdf2f8"/>
+                <polyline points="10,15 100,75 190,15" fill="none" stroke="#fbcfe8" stroke-width="2" stroke-linejoin="round"/>
+                
+                <!-- Segel Hati / Love Logo di Tengah -->
+                <g transform="translate(86, 61) scale(1.15)">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#e11d48" filter="url(#glow)"/>
+                </g>
+            </svg>
+        </div>
+
+        <!-- Tampilan Countdown Timer -->
+        <div id="countdown-container" class="mb-6 text-center text-gray-800 font-sans z-10">
+            <p class="text-xl mb-3 font-bold text-gray-700">Amplop bisa dibuka dalam:</p>
+            <div class="flex gap-3 md:gap-4 text-2xl font-bold bg-white/60 backdrop-blur-md px-6 py-3 rounded-2xl border border-gray-300 shadow-sm">
+                <div class="flex flex-col items-center"><span id="cd-days">00</span><span class="text-xs font-normal uppercase tracking-wider text-gray-500">Hari</span></div>
+                <div class="text-gray-400 mt-1">:</div>
+                <div class="flex flex-col items-center"><span id="cd-hours">00</span><span class="text-xs font-normal uppercase tracking-wider text-gray-500">Jam</span></div>
+                <div class="text-gray-400 mt-1">:</div>
+                <div class="flex flex-col items-center"><span id="cd-mins">00</span><span class="text-xs font-normal uppercase tracking-wider text-gray-500">Menit</span></div>
+                <div class="text-gray-400 mt-1">:</div>
+                <div class="flex flex-col items-center"><span id="cd-secs">00</span><span class="text-xs font-normal uppercase tracking-wider text-gray-500">Detik</span></div>
+            </div>
+        </div>
+
+        <!-- Tombol Open (Terkunci Otomatis). Pastikan ada id="open-btn" dan kata "disabled" -->
+        <button id="open-btn" onclick="window.closeIntro()" disabled class="bg-gray-400 text-gray-200 rounded-full px-12 py-3 font-sans font-bold text-2xl shadow-md cursor-not-allowed transition-all opacity-70">
+            <span class="border-b-2 border-transparent pb-1 tracking-wide">Open</span>
+        </button>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- KONTEN UTAMA (Desktop Layout) -->
+    <!-- ========================================== -->
+    <main id="main-content" class="min-h-screen p-4 md:p-8 flex items-center justify-center relative">
+        
+        <div class="max-w-6xl w-full mx-auto flex flex-col md:flex-row gap-8 items-stretch justify-center h-full relative z-10">
+            
+            <!-- KOLOM KIRI: Ucapan & Kalender -->
+            <div class="glass-panel w-full md:w-5/12 p-8 md:p-12 flex flex-col items-center justify-center text-center">
+                <h1 class="font-cursive text-5xl md:text-7xl mb-2 text-pink-700 font-bold drop-shadow-sm">Happy Birthday</h1>
+                <h2 class="font-cursive text-4xl md:text-5xl mb-8 text-pink-900 drop-shadow-sm">My Love 💖</h2>
+                
+                <p class="text-2xl md:text-3xl mb-8 text-pink-950 font-bold bg-white/40 px-6 py-2 rounded-2xl">Hari ini hari spesial kamu</p>
+                
+                <!-- Kalender Oktober -->
+                <div class="bg-white/70 backdrop-blur-md rounded-3xl p-6 w-full max-w-[320px] shadow-xl border border-pink-200 relative">
+                    <h3 class="text-right text-4xl mb-4 text-pink-600 font-bold tracking-wider">Oktober</h3>
+                    
+                    <div class="grid grid-cols-7 gap-y-4 gap-x-2 text-center text-xl text-pink-950 font-bold">
+                        <!-- Header Hari -->
+                        <div class="text-pink-500">S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
+                        
+                        <!-- Tanggal (Oktober 2026 mulai dari Kamis) -->
+                        <div></div><div></div><div></div><div></div> <!-- 4 slot kosong di awal -->
+                        <div>1</div><div>2</div><div>3</div>
+                        <div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div>10</div>
+                        <div>11</div><div>12</div><div>13</div><div>14</div>
+                        
+                        <!-- Highlight Tanggal 15 -->
+                        <div class="relative flex justify-center items-center cursor-pointer group" onclick="window.openModal('modal-cake')" title="Klik aku!">
+                            <span class="absolute z-10 text-white font-bold text-2xl group-hover:scale-110 transition">15</span>
+                            <svg class="heartbeat text-pink-500 w-12 h-12 fill-current drop-shadow-md" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                        </div>
+                        
+                        <div>16</div><div>17</div>
+                        <div>18</div><div>19</div><div>20</div><div>21</div><div>22</div><div>23</div><div>24</div>
+                        <div>25</div><div>26</div><div>27</div><div>28</div><div>29</div><div>30</div><div>31</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KOLOM KANAN: Grid 6 Tombol Interaktif -->
+            <div class="glass-panel w-full md:w-7/12 p-8 md:p-12 flex flex-col justify-center bg-white/40">
+                <p class="text-3xl md:text-4xl text-center text-pink-950 font-bold mb-10 bg-white/50 py-2 rounded-2xl shadow-sm">Pilih aja mau buka yang mana sayangg, saran aku, urutan aja sihh hehe</p>
+                
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
+                    <!-- Tombol 1: Kue -->
+                    <button onclick="window.openModal('modal-cake')" class="glass-button rounded-3xl aspect-square flex flex-col items-center justify-center text-6xl shadow-md">
+                        🎂
+                        <span class="text-2xl mt-4 text-pink-900 font-bold tracking-wide">Wish</span>
+                    </button>
+                    <!-- Tombol 2: Surat -->
+                    <button onclick="window.openModal('modal-letter')" class="glass-button rounded-3xl aspect-square flex flex-col items-center justify-center text-6xl shadow-md">
+                        💌
+                        <span class="text-2xl mt-4 text-pink-900 font-bold tracking-wide">Letter</span>
+                    </button>
+                    <!-- Tombol 3: Kamera -->
+                    <button onclick="window.openModal('modal-camera')" class="glass-button rounded-3xl aspect-square flex flex-col items-center justify-center text-6xl shadow-md">
+                        📸
+                        <span class="text-2xl mt-4 text-pink-900 font-bold tracking-wide">Memories</span>
+                    </button>
+                    <!-- Tombol 4: Kado -->
+                    <button onclick="window.openModal('modal-gift')" class="glass-button rounded-3xl aspect-square flex flex-col items-center justify-center text-6xl shadow-md">
+                        🎁
+                        <span class="text-2xl mt-4 text-pink-900 font-bold tracking-wide">Gift</span>
+                    </button>
+                    <!-- Tombol 5: Musik -->
+                    <button onclick="window.openModal('modal-music')" class="glass-button rounded-3xl aspect-square flex flex-col items-center justify-center text-6xl shadow-md">
+                        🎧
+                        <span class="text-2xl mt-4 text-pink-900 font-bold tracking-wide">Songs</span>
+                    </button>
+                    <!-- Tombol 6: Me & You -->
+                    <button onclick="window.openModal('modal-heart')" class="glass-button rounded-3xl aspect-square flex flex-col items-center justify-center text-6xl shadow-md">
+                        🎥
+                        <span class="text-2xl mt-4 text-pink-900 font-bold tracking-wide">Me &amp; You</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <footer class="absolute bottom-3 left-0 right-0 z-10 text-center text-sm font-bold text-pink-900/80">
+            create with 💖 @msefriyandi
+        </footer>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- MODALS (POP-UPS OVERLAY) -->
+    <!-- ========================================== -->
+    <div id="modal-overlay" class="fixed inset-0 z-50 bg-pink-950/60 backdrop-blur-lg hidden flex items-center justify-center p-4 transition-opacity duration-300 opacity-0" onclick="window.closeModal(event)">
+        
+        <!-- Modal Content Container -->
+        <div id="modal-content-box" class="glass-panel bg-white/90 w-full max-w-3xl max-h-[90vh] overflow-y-auto p-8 md:p-14 relative shadow-2xl border-2 border-pink-300" onclick="event.stopPropagation()">
+            
+            <!-- Tombol Close (X) -->
+            <button onclick="window.forceCloseModal()" class="absolute top-5 right-6 text-4xl text-pink-600 hover:text-pink-900 transition-colors z-20">✖</button>
+
+            <!-- Konten 1: Cake (Birthday Wish) -->
+            <div id="modal-cake" class="modal-section hidden text-center">
+                <h2 class="font-cursive text-6xl mb-6 text-pink-700 drop-shadow-sm">Birthday Wish For You</h2>
+                <div class="text-7xl mb-8 animate-bounce">🎂</div>
+                <div class="bg-white/90 rounded-2xl p-8 text-left text-2xl text-pink-950 shadow-lg border border-pink-200 space-y-4">
+                    <p class="font-bold text-pink-700 text-3xl">Happy Birthday, Sayang! 💖</p>
+                    <p>Hari ini adalah hari yang sangat spesial buat kamu, karena hari ini seseorang yang aku sayang di hidupku bertambah usia.</p>
+                    <p>Semoga di umur yang baru ini, kamu selalu diberikan kesehatan, kebahagiaan, ketenangan, dan semua hal baik yang selama ini kamu doakan, Serta dikelilingi orang-orang baik. Semoga setiap langkahmu membawa hasil yang indah.</p>
+                </div>
+            </div>
+
+            <!-- Konten 2: Letter -->
+            <div id="modal-letter" class="modal-section hidden text-center">
+                <h2 class="font-cursive text-7xl mb-8 text-pink-700 drop-shadow-sm">Letter for you</h2>
+                <div class="bg-pink-50/95 rounded-2xl p-8 text-left text-2xl text-pink-950 shadow-lg border border-pink-300 space-y-4 relative">
+                    <span class="absolute top-4 right-4 text-4xl opacity-50">💌</span>
+                    <p class="font-bold text-3xl mb-4">Hai, sayangkuu Dina.</p>
+                    <p>Kalau kamu sedang membaca surat ini, berarti kamu sudah membuka salah satu bagian yang paling aku tunggu.</p>
+                    <p>Aku cuma ingin bilang terima kasih. Terima kasih sudah hadir di hidupku, membuat tawa & bahagiaku kembali lagi, terimakasih sudah bertahan sejauh ini, dan sudah menjadi senyum di hari-hariku yang biasa.</p>
+                     <p>Walaupun kita LDR, Tapi aku akan cari cara buat kamu bahagia, seneng, dan ga ngerasa kesepian. Kita lewatin sama-sama yaa sayangg, Aku selalu berdoa, Agar Aku & Kamu menjadi Kita</p>
+                    <p>Kita tahu kita nggak selalu melewati hari yang mudah. Kadang kita berbeda pendapat, tapi di balik semua itu, aku tetap memilih kamu. Berkali-kali.</p>
+                </div>
+            </div>
+
+            <!-- Konten 3: Camera (Memories) -->
+            <div id="modal-camera" class="modal-section hidden text-center">
+                <h2 class="font-cursive text-7xl mb-2 text-pink-700 drop-shadow-sm">Our Memories</h2>
+                <p class="text-pink-900 text-2xl mb-10 font-bold bg-white/50 inline-block px-4 rounded-full">Here's to all the beautiful memories we've made...</p>
+                
+                <div class="flex flex-wrap justify-center gap-10">
+                    <div class="polaroid transform -rotate-3 cursor-pointer">
+                        <img src="https://cdn.discordapp.com/attachments/1520075033740054590/1554520982071279687/IMG_20260318_002531_738.jpg?ex=6abd2ffb&is=6abbde7b&hm=da3b41afdd71b5aa4a9cacaa096563d9ff183109a7c4fd99c94b618a69f45c68&" alt="Memory 1" class="w-64 h-64 object-cover mb-4 rounded border border-pink-100">
+                        <p class="text-pink-950 text-3xl font-bold font-cursive">First Meet</p>
+                    </div>
+
+                    <!-- FOTO 1: SLIDESHOW GANDA -->
+                    <div class="polaroid transform -rotate-3 cursor-pointer">
+                        <div class="w-64 h-64 relative mb-4 rounded border border-pink-100 overflow-hidden bg-pink-50">
+                            <!-- FOTO PERTAMA (Otomatis tampil awal) -->
+                            <img id="slide1" src="https://cdn.discordapp.com/attachments/1520075033740054590/1554520979315761172/Salinan_TFAN0481_1.jpg?ex=6abd2ffb&is=6abbde7b&hm=b338388a03984fecddade4b97134dfde5c0a23ac489ff9b7e513bbd8b137cdbf&" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out opacity-100" alt="Graduate 1">
+                            
+                            <!-- FOTO KEDUA (Tersembunyi di awal, muncul otomatis nanti) -->
+                            <img id="slide2" src="https://cdn.discordapp.com/attachments/1520075033740054590/1554520980280574052/IMG-20260630-WA0093.jpg?ex=6abdd8bb&is=6abc873b&hm=79bad37d66a068fac722109d5ad9b5c63089413ee26f285ab05a4cee2f9b5701&" alt="Graduate 2">
+                        </div>
+                        <p class="text-pink-950 text-3xl font-bold font-cursive">Your Graduation</p>
+                    </div>
+                    
+                    <!-- FOTO 3: VIDEO DISCORD ANDA -->
+                    <div class="polaroid transform rotate-6 mt-6 cursor-pointer">
+                        <video autoplay loop muted playsinline class="w-64 h-64 object-cover mb-4 rounded border border-pink-100 bg-black">
+                            <source src="https://media.discordapp.net/attachments/1520075033740054590/1554706655135014912/8715b021-dfc4-4f66-810e-d732c5a601f4.mp4?backend=b2&ex=6abddce7&is=6abc8b67&hm=e9eb20c3159c678745c2c84dfdd48007f00261f8d109f92ce939a7e10e97c96f&" type="video/mp4">
+                        </video>
+                        <p class="text-pink-950 text-3xl font-bold font-cursive">Photobooth With You</p>
+                    </div>
+
+                    <!-- FOTO 4: SLIDESHOW GANDA -->
+                    <div class="polaroid transform -rotate-3 cursor-pointer">
+                        <div class="w-64 h-64 relative mb-4 rounded border border-pink-100 overflow-hidden bg-pink-50">
+                            <!-- FOTO PERTAMA (Otomatis tampil awal) -->
+                            <img id="slide3" src="https://cdn.discordapp.com/attachments/1520075033740054590/1554520981677285518/IMG_20260530_055424.jpg?ex=6abdd8bb&is=6abc873b&hm=972cf2cbbe90e21e42bfbeaed4e95ca78705161db338feab18f59ba0e8c082b6&" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out opacity-100" alt="Hiking 1">
+                            
+                            <!-- FOTO KEDUA (Tersembunyi di awal, muncul otomatis nanti) -->
+                            <img id="slide4" src="https://cdn.discordapp.com/attachments/1520075033740054590/1554519332732538910/IMG-20260915-WA0020.jpg?ex=6abd2e72&is=6abbdcf2&hm=858a96847d8dfefa7b871ade06fefa2d7b7f29284b89c9226c0130a4a909c379&" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out opacity-0" alt="Hiking 2">
+                        </div>
+                        <p class="text-pink-950 text-3xl font-bold font-cursive">Hiking Together</p>
+                    </div>
+
+                     <div class="polaroid transform -rotate-3 cursor-pointer">
+                        <img src="https://cdn.discordapp.com/attachments/1520075033740054590/1554520978288021534/IMG-20260918-WA0017.jpg?ex=6abdd8ba&is=6abc873a&hm=1a7eadca2645dca2ca4fd0975f18bf5d176819b1125b68e111160bc5d8656424&" alt="Memory 1" class="w-64 h-64 object-cover mb-4 rounded border border-pink-100">
+                        <p class="text-pink-950 text-3xl font-bold font-cursive">Malioboro At Night</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Konten 4: Gift -->
+            <div id="modal-gift" class="modal-section hidden text-center pt-8">
+                <div class="text-8xl mb-8 animate-pulse">🎁</div>
+                <div class="bg-pink-100/90 text-pink-900 p-6 rounded-2xl inline-block mb-12 relative shadow-lg border border-pink-300">
+                    <p class="text-3xl font-bold">Congratulations! <br>Kamu berhasil menemukan kotak hadiah ini.</p>
+                    <div class="absolute w-8 h-8 bg-pink-100 border-b border-r border-pink-300 transform rotate-45 left-1/2 -bottom-4 -translate-x-1/2"></div>
+                </div>
+                
+                <div class="border-4 border-dashed border-pink-400 p-10 bg-white/95 rounded-3xl relative shadow-xl">
+                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-pink-600 px-8 py-3 text-white text-2xl tracking-widest rounded-full shadow-lg font-bold">SECRET GIFT</div>
+                    <p class="mt-8 text-3xl text-pink-950 leading-relaxed">
+                        Hadiah aslinya sudah aku siapin special buat kamu. Jadi setelah selesai melihat semua halaman ini, Buka hadiahnya yaa! <br><br>
+                        <span class="font-cursive text-5xl text-pink-700">Semoga kamu suka! 💖</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Konten 5: Music -->
+            <div id="modal-music" class="modal-section hidden text-center">
+                <h2 class="font-cursive text-7xl mb-10 text-pink-700 drop-shadow-sm">Our Songs</h2>
+                <div class="w-full max-w-2xl mx-auto">
+                    <div id="spotify-embed" class="w-full"></div>
+                    <p class="mt-4 text-lg text-pink-900">
+                        Jika playlist tidak tampil, <a href="https://open.spotify.com/playlist/5NpSS3NMYjJv1DDUKB72g5" target="_blank" rel="noopener noreferrer" class="font-bold underline">buka langsung di Spotify</a>.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Konten 6: Me & You (Video) -->
+            <div id="modal-heart" class="modal-section hidden text-center pt-6">
+                <h2 class="font-cursive text-7xl mb-12 text-pink-700 drop-shadow-sm">With My Love</h2>
+                <div class="border-4 border-pink-300 rounded-3xl p-6 md:p-10 bg-white/95 relative shadow-2xl">
+                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-full p-4 text-5xl shadow-md border-2 border-pink-200">🎥</div>
+                    <video id="love-video" controls playsinline onplay="window.syncBackgroundWithVideo(true)" onpause="window.syncBackgroundWithVideo(false)" onended="window.syncBackgroundWithVideo(false)" class="w-full max-w-2xl mx-auto rounded-2xl shadow-lg bg-black">
+                        <source src="https://media.discordapp.net/attachments/1520075033740054590/1555122213441638420/snaptik_7691599524250258694_hd.mp4?ex=6abf5fec&is=6abe0e6c&hm=fc1afbebec3935856a52242c608cbbb0f162c76358efe0305cbd4f2ecdc23bdf&" type="video/mp4">
+                        Browser kamu tidak mendukung pemutaran video.
+                    </video>
+                </div>
+            </div>
+
+            <!-- Tombol Back untuk menutup modal -->
+            <div class="w-full mt-12 flex justify-center">
+                <button onclick="window.forceCloseModal()" class="bg-pink-600 text-white text-3xl px-16 py-4 rounded-full hover:bg-pink-700 transition shadow-xl transform hover:scale-105 active:scale-95 font-bold tracking-wide">
+                    Kembali
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <!-- Load YouTube and Spotify embed APIs -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
+    <script>
+        let player;
+        let spotifyIsPlaying = false;
+        let videoIsPlaying = false;
+        let backgroundPausedForSpotify = false;
+        let isPlayerReady = false;
+        let shouldPlay = true;
+        let playNextOnReady = false;
+        const nextSongId = 'l83md2sMAA4';
+
+        function pauseBackgroundForMedia() {
+            if (!isPlayerReady || !player) {
+                backgroundPausedForSpotify = true;
+                return;
+            }
+
+            if (player.getPlayerState() !== 2) {
+                backgroundPausedForSpotify = true;
+                player.pauseVideo();
+            }
+        }
+
+        function resumeBackgroundIfMediaStopped() {
+            if (!spotifyIsPlaying && !videoIsPlaying && backgroundPausedForSpotify && isPlayerReady && player) {
+                backgroundPausedForSpotify = false;
+                player.playVideo();
+            }
+        }
+
+        function syncBackgroundWithSpotify(isPaused) {
+            spotifyIsPlaying = !isPaused;
+
+            if (spotifyIsPlaying || videoIsPlaying) {
+                pauseBackgroundForMedia();
+            } else {
+                resumeBackgroundIfMediaStopped();
+            }
+        }
+
+        function syncBackgroundWithVideo(isPlaying) {
+            videoIsPlaying = isPlaying;
+
+            if (videoIsPlaying || spotifyIsPlaying) {
+                pauseBackgroundForMedia();
+            } else {
+                resumeBackgroundIfMediaStopped();
+            }
+        }
+        window.syncBackgroundWithVideo = syncBackgroundWithVideo;
+
+        window.onSpotifyIframeApiReady = function (IFrameAPI) {
+            const embedElement = document.getElementById('spotify-embed');
+            if (!embedElement) return;
+
+            IFrameAPI.createController(embedElement, {
+                uri: 'spotify:playlist:5NpSS3NMYjJv1DDUKB72g5'
+            }, function (controller) {
+                controller.addListener('playback_update', function (event) {
+                    syncBackgroundWithSpotify(event.data.isPaused);
+                });
+            });
+        };
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player', {
+                height: '0',
+                width: '0',
+                videoId: 'R1igdbJCNqc',
+                playerVars: {
+                    'autoplay': 1,
+                    'controls': 0,
+                    'rel': 0,
+                    'loop': 1,
+                    'playlist': 'R1igdbJCNqc' 
+                },
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+        window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+
+        function onPlayerReady(event) {
+            isPlayerReady = true;
+            player.setVolume(50);
+            
+            if (shouldPlay) {
+                player.playVideo();
+                const musicBtn = document.getElementById('music-toggle');
+                if (musicBtn) musicBtn.innerText = '🔊';
+            } else if (playNextOnReady) {
+                player.loadVideoById(nextSongId);
+                const musicBtn = document.getElementById('music-toggle');
+                if (musicBtn) musicBtn.innerText = '🔊';
+            }
+
+            if (spotifyIsPlaying || videoIsPlaying) {
+                pauseBackgroundForMedia();
+            } else {
+                resumeBackgroundIfMediaStopped();
+            }
+        }
+        window.onPlayerReady = onPlayerReady;
+
+        function closeIntro() {
+            const intro = document.getElementById('intro-screen');
+            if (intro) {
+                intro.classList.add('intro-hidden');
+            }
+            
+            const musicBtn = document.getElementById('music-toggle');
+            shouldPlay = false;
+            
+            if (isPlayerReady && player && typeof player.loadVideoById === 'function') {
+                player.loadVideoById(nextSongId);
+                if (musicBtn) musicBtn.innerText = '🔊';
+            } else {
+                playNextOnReady = true;
+                if (musicBtn) musicBtn.innerText = '🔊';
+            }
+
+            if (musicBtn) {
+                musicBtn.classList.remove('opacity-0', 'pointer-events-none');
+            }
+            
+            setTimeout(() => {
+                if (intro) intro.remove();
+            }, 800);
+        }
+        window.closeIntro = closeIntro;
+
+        const overlay = document.getElementById('modal-overlay');
+        const sections = document.querySelectorAll('.modal-section');
+
+        function openModal(modalId) {
+            const loveVideo = document.getElementById('love-video');
+            if (loveVideo && modalId !== 'modal-heart') {
+                loveVideo.pause();
+            }
+
+            sections.forEach(sec => {
+                sec.classList.add('hidden');
+                sec.classList.remove('modal-enter');
+            });
+
+            const targetSection = document.getElementById(modalId);
+            if (targetSection && overlay) {
+                targetSection.classList.remove('hidden');
+                
+                overlay.classList.remove('hidden');
+                void overlay.offsetWidth; 
+                overlay.classList.remove('opacity-0');
+                overlay.classList.add('opacity-100');
+
+                targetSection.classList.add('modal-enter');
+
+                if (modalId === 'modal-heart' && loveVideo) {
+                    const playAttempt = loveVideo.play();
+                    if (playAttempt) playAttempt.catch(() => {});
+                }
+            }
+        }
+        window.openModal = openModal;
+
+        function forceCloseModal() {
+            const loveVideo = document.getElementById('love-video');
+            if (loveVideo) loveVideo.pause();
+            if (!overlay) return;
+            overlay.classList.remove('opacity-100');
+            overlay.classList.add('opacity-0');
+            
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+            }, 300);
+        }
+        window.forceCloseModal = forceCloseModal;
+
+        function closeModal(event) {
+            if (event.target === overlay) {
+                forceCloseModal();
+            }
+        }
+        window.closeModal = closeModal;
+
+        function toggleMusic() {
+            if (!isPlayerReady || !player) return;
+            
+            const state = player.getPlayerState();
+            const musicBtn = document.getElementById('music-toggle');
+            
+            if (state === 1) { 
+                player.pauseVideo();
+                if (musicBtn) musicBtn.innerText = '🔇'; 
+            } else { 
+                player.playVideo();
+                if (musicBtn) musicBtn.innerText = '🔊';
+            }
+        }
+        window.toggleMusic = toggleMusic;
+
+        // --- SISTEM SLIDESHOW FOTO OTOMATIS ---
+        setInterval(() => {
+            // Slideshow 1 (Graduation)
+            const slide1 = document.getElementById('slide1');
+            const slide2 = document.getElementById('slide2');
+            
+            if(slide1 && slide2) {
+                if (slide1.classList.contains('opacity-100')) {
+                    slide1.classList.replace('opacity-100', 'opacity-0');
+                    slide2.classList.replace('opacity-0', 'opacity-100');
+                } else {
+                    slide1.classList.replace('opacity-0', 'opacity-100');
+                    slide2.classList.replace('opacity-100', 'opacity-0');
+                }
+            }
+
+            // Slideshow 2 (Hiking Together)
+            const slide3 = document.getElementById('slide3');
+            const slide4 = document.getElementById('slide4');
+            
+            if(slide3 && slide4) {
+                if (slide3.classList.contains('opacity-100')) {
+                    slide3.classList.replace('opacity-100', 'opacity-0');
+                    slide4.classList.replace('opacity-0', 'opacity-100');
+                } else {
+                    slide3.classList.replace('opacity-0', 'opacity-100');
+                    slide4.classList.replace('opacity-100', 'opacity-0');
+                }
+            }
+        }, 3000); // Angka 3000 artinya gambar berganti setiap 3 detik (3000 milidetik).
+
+        // --- SISTEM COUNTDOWN TIMER ---
+        // UNTUK TESTING / UJI COBA: Ganti tahun menjadi 2023 agar tombol langsung terbuka.
+        // Nanti jika sudah selesai diuji dan ingin dikirim, JANGAN LUPA kembalikan ke tahun 2026!
+        const targetDate = new Date('2026-10-15T00:00:00').getTime();
+
+        const countdownInterval = setInterval(() => {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            // Jika waktu sudah habis (melewati 15 Okt 00:00)
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                
+                // Ubah teks timer menjadi pesan siap dibuka
+                const cdContainer = document.getElementById('countdown-container');
+                if (cdContainer) {
+                    cdContainer.innerHTML = '<p class="text-4xl font-bold text-pink-600 animate-bounce mt-4 mb-4 font-cursive drop-shadow-sm">It\'s Time! 💖</p>';
+                }
+                
+                // Nyalakan tombol Open (Ubah jadi hitam dan bisa diklik)
+                const openBtn = document.getElementById('open-btn');
+                if (openBtn) {
+                    openBtn.disabled = false;
+                    openBtn.classList.remove('bg-gray-400', 'text-gray-200', 'cursor-not-allowed', 'opacity-70');
+                    openBtn.classList.add('bg-black', 'text-white', 'hover:bg-gray-800', 'hover:scale-105', 'active:scale-95', 'shadow-xl', 'cursor-pointer');
+                    
+                    // Tambahkan garis bawah putih pada teks Open
+                    const spanInside = openBtn.querySelector('span');
+                    if (spanInside) {
+                        spanInside.classList.replace('border-transparent', 'border-white');
+                    }
+                }
+                return; // Hentikan perhitungan
+            }
+
+            // Hitung sisa hari, jam, menit, dan detik
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const mins = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const secs = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Tampilkan hasil hitungan ke HTML
+            const elDays = document.getElementById('cd-days');
+            const elHours = document.getElementById('cd-hours');
+            const elMins = document.getElementById('cd-mins');
+            const elSecs = document.getElementById('cd-secs');
+
+            if(elDays) elDays.innerText = days.toString().padStart(2, '0');
+            if(elHours) elHours.innerText = hours.toString().padStart(2, '0');
+            if(elMins) elMins.innerText = mins.toString().padStart(2, '0');
+            if(elSecs) elSecs.innerText = secs.toString().padStart(2, '0');
+            
+        }, 1000); // Perbarui setiap 1 detik
+    </script>
+</body>
+</html>
