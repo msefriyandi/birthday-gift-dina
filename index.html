@@ -115,8 +115,9 @@
 </head>
 <body class="font-handwriting">
 
-    <!-- PEMUTAR MUSIK LATAR -->
-    <audio id="background-audio" src="https://github.com/muhamadsefriyandi/birthday-gift/blob/main/music.mp3" loop preload="auto"></audio>
+    <!-- Musik berbeda untuk layar pembuka dan halaman utama -->
+    <audio id="intro-audio" src="intro-music.mp3" loop preload="auto"></audio>
+    <audio id="background-audio" src="music.mp3" loop preload="auto"></audio>
     <button id="music-toggle" onclick="window.toggleMusic()" class="fixed top-6 right-6 z-40 bg-white/60 backdrop-blur-md border border-pink-300 text-pink-700 w-12 h-12 rounded-full flex items-center justify-center text-2xl shadow-lg hover:bg-pink-100 hover:scale-110 transition-all opacity-0 pointer-events-none" title="Matikan/Nyalakan Musik">
         🔇
     </button>
@@ -179,7 +180,7 @@
         </div>
 
         <!-- Tombol Open (Terkunci Otomatis). Pastikan ada id="open-btn" dan kata "disabled" -->
-        <button id="open-btn" onclick="window.closeIntro()" disabled class="bg-gray-400 text-gray-200 rounded-full px-12 py-3 font-sans font-bold text-2xl shadow-md cursor-not-allowed transition-all opacity-70">
+        <button id="open-btn" onclick="event.stopPropagation(); window.closeIntro()" disabled class="bg-gray-400 text-gray-200 rounded-full px-12 py-3 font-sans font-bold text-2xl shadow-md cursor-not-allowed transition-all opacity-70">
             <span class="border-b-2 border-transparent pb-1 tracking-wide">Open</span>
         </button>
     </div>
@@ -409,6 +410,7 @@
     <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
     <script>
         const backgroundAudio = document.getElementById('background-audio');
+        const introAudio = document.getElementById('intro-audio');
         let spotifyIsPlaying = false;
         let videoIsPlaying = false;
         let backgroundPausedByMedia = false;
@@ -428,14 +430,14 @@
         }
 
         function startIntroMusic() {
-            if (backgroundAudio && backgroundAudio.paused && !spotifyIsPlaying && !videoIsPlaying) {
-                backgroundAudio.play().then(() => {
-                    const musicBtn = document.getElementById('music-toggle');
-                    if (musicBtn) musicBtn.innerText = '🔊';
-                }).catch(() => {});
+            if (introAudio && introAudio.paused) {
+                introAudio.play().catch(() => {});
             }
         }
         window.startIntroMusic = startIntroMusic;
+
+        // Coba putar otomatis; browser mungkin menunggu interaksi pertama pengguna.
+        startIntroMusic();
 
         function syncBackgroundWithSpotify(isPaused) {
             spotifyIsPlaying = !isPaused;
@@ -477,8 +479,17 @@
                 intro.classList.add('intro-hidden');
             }
 
-            startIntroMusic();
+            if (introAudio) {
+                introAudio.pause();
+                introAudio.currentTime = 0;
+            }
             const musicBtn = document.getElementById('music-toggle');
+            if (backgroundAudio && !spotifyIsPlaying && !videoIsPlaying) {
+                backgroundAudio.play().then(() => {
+                    if (musicBtn) musicBtn.innerText = '🔊';
+                }).catch(() => {});
+            }
+
             if (musicBtn) {
                 musicBtn.classList.remove('opacity-0', 'pointer-events-none');
             }
