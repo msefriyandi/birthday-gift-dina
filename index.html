@@ -115,8 +115,8 @@
 </head>
 <body class="font-handwriting">
 
-    <!-- YOUTUBE PLAYER & FLOATING BUTTON -->
-    <div id="youtube-player" class="absolute w-0 h-0 -left-full overflow-hidden"></div>
+    <!-- PEMUTAR MUSIK LATAR -->
+    <audio id="background-audio" src="music.mp3" loop preload="auto"></audio>
     <button id="music-toggle" onclick="window.toggleMusic()" class="fixed top-6 right-6 z-40 bg-white/60 backdrop-blur-md border border-pink-300 text-pink-700 w-12 h-12 rounded-full flex items-center justify-center text-2xl shadow-lg hover:bg-pink-100 hover:scale-110 transition-all opacity-0 pointer-events-none" title="Matikan/Nyalakan Musik">
         🔇
     </button>
@@ -124,7 +124,7 @@
     <!-- ========================================== -->
     <!-- INTRO SCREEN (Halaman Amplop Awal) -->
     <!-- ========================================== -->
-    <div id="intro-screen" class="fixed inset-0 z-50 intro-bg flex flex-col items-center justify-center">
+    <div id="intro-screen" onclick="window.startIntroMusic()" class="fixed inset-0 z-50 intro-bg flex flex-col items-center justify-center">
         
         <!-- Teks Kaligrafi -->
         <div class="intro-title-backdrop text-center mb-12">
@@ -405,37 +405,37 @@
     </div>
 
     <!-- JAVASCRIPT LOGIC -->
-    <!-- Load YouTube and Spotify embed APIs -->
-    <script src="https://www.youtube.com/iframe_api"></script>
+    <!-- Load Spotify embed API -->
     <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
     <script>
-        let player;
+        const backgroundAudio = document.getElementById('background-audio');
         let spotifyIsPlaying = false;
         let videoIsPlaying = false;
-        let backgroundPausedForSpotify = false;
-        let isPlayerReady = false;
-        let shouldPlay = true;
-        let playNextOnReady = false;
-        const nextSongId = 'l83md2sMAA4';
+        let backgroundPausedByMedia = false;
 
         function pauseBackgroundForMedia() {
-            if (!isPlayerReady || !player) {
-                backgroundPausedForSpotify = true;
-                return;
-            }
-
-            if (player.getPlayerState() !== 2) {
-                backgroundPausedForSpotify = true;
-                player.pauseVideo();
+            if (backgroundAudio && !backgroundAudio.paused) {
+                backgroundPausedByMedia = true;
+                backgroundAudio.pause();
             }
         }
 
         function resumeBackgroundIfMediaStopped() {
-            if (!spotifyIsPlaying && !videoIsPlaying && backgroundPausedForSpotify && isPlayerReady && player) {
-                backgroundPausedForSpotify = false;
-                player.playVideo();
+            if (!spotifyIsPlaying && !videoIsPlaying && backgroundPausedByMedia && backgroundAudio) {
+                backgroundPausedByMedia = false;
+                backgroundAudio.play().catch(() => {});
             }
         }
+
+        function startIntroMusic() {
+            if (backgroundAudio && backgroundAudio.paused && !spotifyIsPlaying && !videoIsPlaying) {
+                backgroundAudio.play().then(() => {
+                    const musicBtn = document.getElementById('music-toggle');
+                    if (musicBtn) musicBtn.innerText = '🔊';
+                }).catch(() => {});
+            }
+        }
+        window.startIntroMusic = startIntroMusic;
 
         function syncBackgroundWithSpotify(isPaused) {
             spotifyIsPlaying = !isPaused;
@@ -471,68 +471,18 @@
             });
         };
 
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('youtube-player', {
-                height: '0',
-                width: '0',
-                videoId: 'R1igdbJCNqc',
-                playerVars: {
-                    'autoplay': 1,
-                    'controls': 0,
-                    'rel': 0,
-                    'loop': 1,
-                    'playlist': 'R1igdbJCNqc' 
-                },
-                events: {
-                    'onReady': onPlayerReady
-                }
-            });
-        }
-        window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
-
-        function onPlayerReady(event) {
-            isPlayerReady = true;
-            player.setVolume(50);
-            
-            if (shouldPlay) {
-                player.playVideo();
-                const musicBtn = document.getElementById('music-toggle');
-                if (musicBtn) musicBtn.innerText = '🔊';
-            } else if (playNextOnReady) {
-                player.loadVideoById(nextSongId);
-                const musicBtn = document.getElementById('music-toggle');
-                if (musicBtn) musicBtn.innerText = '🔊';
-            }
-
-            if (spotifyIsPlaying || videoIsPlaying) {
-                pauseBackgroundForMedia();
-            } else {
-                resumeBackgroundIfMediaStopped();
-            }
-        }
-        window.onPlayerReady = onPlayerReady;
-
         function closeIntro() {
             const intro = document.getElementById('intro-screen');
             if (intro) {
                 intro.classList.add('intro-hidden');
             }
-            
-            const musicBtn = document.getElementById('music-toggle');
-            shouldPlay = false;
-            
-            if (isPlayerReady && player && typeof player.loadVideoById === 'function') {
-                player.loadVideoById(nextSongId);
-                if (musicBtn) musicBtn.innerText = '🔊';
-            } else {
-                playNextOnReady = true;
-                if (musicBtn) musicBtn.innerText = '🔊';
-            }
 
+            startIntroMusic();
+            const musicBtn = document.getElementById('music-toggle');
             if (musicBtn) {
                 musicBtn.classList.remove('opacity-0', 'pointer-events-none');
             }
-            
+
             setTimeout(() => {
                 if (intro) intro.remove();
             }, 800);
@@ -593,17 +543,17 @@
         window.closeModal = closeModal;
 
         function toggleMusic() {
-            if (!isPlayerReady || !player) return;
-            
-            const state = player.getPlayerState();
+            if (!backgroundAudio) return;
+
             const musicBtn = document.getElementById('music-toggle');
-            
-            if (state === 1) { 
-                player.pauseVideo();
-                if (musicBtn) musicBtn.innerText = '🔇'; 
-            } else { 
-                player.playVideo();
-                if (musicBtn) musicBtn.innerText = '🔊';
+            if (backgroundAudio.paused) {
+                backgroundAudio.play().then(() => {
+                    if (musicBtn) musicBtn.innerText = '🔊';
+                }).catch(() => {});
+            } else {
+                backgroundAudio.pause();
+                backgroundPausedByMedia = false;
+                if (musicBtn) musicBtn.innerText = '🔇';
             }
         }
         window.toggleMusic = toggleMusic;
