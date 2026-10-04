@@ -42,10 +42,12 @@
 
         .intro-title-backdrop {
             padding: 0.75rem 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.7);
             border-radius: 1.25rem;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
+            background: rgba(255, 247, 251, 0.52);
+            box-shadow: 0 12px 30px rgba(157, 23, 77, 0.12);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
 
         /* Glassmorphism Panel Utama */
@@ -70,6 +72,35 @@
             transform: translateY(-8px) scale(1.03);
             box-shadow: 0 15px 30px -5px rgba(236, 72, 153, 0.5);
             border-color: rgba(244, 114, 182, 0.8);
+        }
+
+        /* Penanda tanggal yang bergerak di kalender */
+        .calendar-day {
+            display: grid;
+            place-items: center;
+            width: 1.75rem;
+            height: 1.75rem;
+            justify-self: center;
+            border-radius: 50%;
+            transition: color .16s ease, background .16s ease, box-shadow .16s ease, transform .16s ease;
+        }
+        .calendar-day.is-counting {
+            color: #fff;
+            background: #ec4899;
+            box-shadow: 0 0 0 5px rgba(244, 114, 182, .22), 0 0 18px rgba(236, 72, 153, .65);
+            transform: scale(1.12);
+        }
+        .calendar-day.is-final {
+            color: #fff;
+            transform: scale(1.08);
+        }
+        .calendar-heart {
+            opacity: 0;
+            transition: opacity .25s ease;
+        }
+        .calendar-heart.is-visible { opacity: 1; }
+        @media (prefers-reduced-motion: reduce) {
+            .calendar-day, .calendar-heart { transition: none; }
         }
 
         /* Animasi Detak Jantung */
@@ -105,15 +136,572 @@
             z-index: 10;
         }
 
+        /* Layar login bergaya Windows */
+        .login-screen {
+            background: linear-gradient(135deg, rgba(8, 25, 52, 0.72), rgba(18, 64, 112, 0.58)),
+                        url('image_661f57.jpg') center / cover no-repeat;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .login-input {
+            letter-spacing: 0.65em;
+            text-indent: 0.65em;
+        }
+        .login-logo {
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        .cat-logo #cat-head {
+            transform-box: fill-box;
+            transform-origin: center bottom;
+            animation: catSway 4s ease-in-out infinite;
+        }
+        .cat-logo #cat-body {
+            transform-box: fill-box;
+            transform-origin: center top;
+            animation: catBreathe 3s ease-in-out infinite;
+        }
+        .cat-logo #cat-tail {
+            transform-box: fill-box;
+            transform-origin: 15% 85%;
+            animation: tailSway 2.8s ease-in-out infinite;
+        }
+        @keyframes catBreathe {
+            0%, 100% { transform: scaleY(1) translateY(0); }
+            50% { transform: scaleY(1.025) translateY(-1px); }
+        }
+        @keyframes tailSway {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(7deg); }
+        }
+        .cat-logo .cat-paw {
+            transform-box: fill-box;
+            transform-origin: center top;
+            animation: pawMove 3s ease-in-out infinite;
+        }
+        .cat-logo .cat-wave-paw {
+            transform-box: fill-box;
+            transform-origin: 15% 85%;
+            animation: pawWave 3.2s ease-in-out infinite;
+        }
+        @keyframes pawMove {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-1.5px); }
+        }
+        @keyframes pawWave {
+            0%, 68%, 100% { transform: rotate(0deg) translateY(0); }
+            76% { transform: rotate(-16deg) translateY(-2px); }
+            84% { transform: rotate(10deg) translateY(-2px); }
+            92% { transform: rotate(-12deg) translateY(-1px); }
+        }
+        .cat-blink {
+            transform-box: fill-box;
+            transform-origin: center;
+            transform: scaleY(0);
+            animation: catBlink 4.5s infinite;
+        }
+        .cat-blink-right { animation-delay: 0.04s; }
+        @keyframes catSway {
+            0%, 100% { transform: rotate(0deg) translateY(0); }
+            50% { transform: rotate(-2deg) translateY(-1px); }
+        }
+        @keyframes catBlink {
+            0%, 91%, 95%, 100% { transform: scaleY(0); }
+            93% { transform: scaleY(1); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .login-logo, .cat-logo #cat-head, .cat-logo #cat-body, .cat-logo #cat-tail, .cat-logo .cat-paw, .cat-logo .cat-wave-paw, .cat-blink { animation: none; }
+        }
+
         /* Intro Screen Transition */
         .intro-hidden {
             opacity: 0;
             visibility: hidden;
             transition: none;
         }
+        .login-hidden {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.45s ease, visibility 0.45s ease;
+        }
+        .login-screen {
+            transition: opacity 0.45s ease, visibility 0.45s ease;
+        }
+        .envelope-reveal {
+            position: fixed;
+            inset: 0;
+            z-index: 70;
+            display: grid;
+            place-items: center;
+            perspective: 1000px;
+            background: rgba(15, 23, 42, 0.35);
+            animation: revealBackdrop 0.45s ease both;
+        }
+        .envelope-reveal svg {
+            width: min(78vw, 360px);
+            height: auto;
+            overflow: visible;
+            filter: drop-shadow(0 24px 24px rgba(76, 20, 52, 0.32));
+            transform-style: preserve-3d;
+            animation: envelopePop 1.15s cubic-bezier(0.2, 0.8, 0.25, 1.15) both;
+        }
+        @keyframes revealBackdrop {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes envelopePop {
+            0% { opacity: 0; transform: translateY(70px) rotateX(-35deg) rotateZ(-8deg) scale(0.35); }
+            55% { opacity: 1; transform: translateY(-12px) rotateX(8deg) rotateZ(3deg) scale(1.08); }
+            78% { transform: translateY(4px) rotateX(-4deg) rotateZ(-1deg) scale(0.97); }
+            100% { opacity: 1; transform: translateY(0) rotateX(0) rotateZ(0) scale(1); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .envelope-reveal, .envelope-reveal svg { animation-duration: 0.01ms; }
+        }
+
+        .birthday-overlay.hidden { display: none; }
+        .birthday-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 80;
+            display: grid;
+            place-items: center;
+            overflow-y: auto;
+            padding: 1.25rem;
+            background: radial-gradient(ellipse at 50% 42%, rgba(156, 40, 105, .48), rgba(32, 8, 35, .88));
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            animation: birthdayBackdrop 0.7s ease both;
+        }
+        .birthday-sparkles {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+            opacity: 0;
+            animation: sparkleFieldIn .8s ease .7s both;
+        }
+        .birthday-opening-title {
+            position: fixed;
+            z-index: 2;
+            top: 50%;
+            left: 50%;
+            width: min(90vw, 760px);
+            margin: 0;
+            color: #fff8fc;
+            font-size: clamp(3.5rem, 12vw, 7rem);
+            line-height: .95;
+            text-align: center;
+            text-shadow: 0 8px 36px rgba(255, 111, 183, .75), 0 2px 12px rgba(36, 4, 30, .45);
+            pointer-events: none;
+            opacity: 0;
+            transform: translate(-50%, -50%);
+            animation: openingTitleSequence 3.2s cubic-bezier(.22,.75,.25,1) .45s both;
+        }
+        .birthday-star {
+            position: absolute;
+            color: #fff8d5;
+            font-size: var(--star-size, 1rem);
+            opacity: 0;
+            text-shadow: 0 0 8px #fff, 0 0 18px #ff9bd2, 0 0 30px #f472b6;
+            animation: starTwinkle var(--star-speed, 2.6s) ease-in-out var(--star-delay, 0s) infinite;
+        }
+        .birthday-star:nth-child(1) { left: 8%; top: 15%; --star-size: 1.2rem; --star-delay: -.4s; }
+        .birthday-star:nth-child(2) { left: 19%; top: 72%; --star-size: .8rem; --star-delay: -1.8s; }
+        .birthday-star:nth-child(3) { left: 28%; top: 23%; --star-size: 1.5rem; --star-delay: -2.1s; }
+        .birthday-star:nth-child(4) { left: 37%; top: 83%; --star-size: .9rem; --star-delay: -.9s; }
+        .birthday-star:nth-child(5) { left: 48%; top: 12%; --star-size: .8rem; --star-delay: -1.4s; }
+        .birthday-star:nth-child(6) { left: 61%; top: 20%; --star-size: 1.3rem; --star-delay: -.7s; }
+        .birthday-star:nth-child(7) { left: 72%; top: 78%; --star-size: 1rem; --star-delay: -2.3s; }
+        .birthday-star:nth-child(8) { left: 84%; top: 18%; --star-size: 1.6rem; --star-delay: -1.2s; }
+        .birthday-star:nth-child(9) { left: 92%; top: 56%; --star-size: .9rem; --star-delay: -.2s; }
+        .birthday-star:nth-child(10) { left: 12%; top: 48%; --star-size: .7rem; --star-delay: -2.5s; }
+        .birthday-star:nth-child(11) { left: 78%; top: 38%; --star-size: .8rem; --star-delay: -1.6s; }
+        .birthday-star:nth-child(12) { left: 54%; top: 88%; --star-size: 1.1rem; --star-delay: -1s; }
+        .birthday-shooting-star {
+            position: absolute;
+            top: 12%;
+            left: 72%;
+            width: 130px;
+            height: 2px;
+            opacity: 0;
+            transform: rotate(-35deg);
+            transform-origin: right;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.95));
+            filter: drop-shadow(0 0 6px #fff) drop-shadow(0 0 12px #f9a8d4);
+            animation: shootingStar 5.5s ease-in-out 1.4s infinite;
+        }
+        .birthday-floating-heart {
+            position: absolute;
+            bottom: -10%;
+            color: rgba(255, 190, 224, .8);
+            font-size: 1.5rem;
+            filter: drop-shadow(0 0 9px rgba(255, 116, 188, .75));
+            animation: heartDrift 8s linear infinite;
+        }
+        .birthday-floating-heart:nth-of-type(13) { left: 16%; animation-delay: -3s; }
+        .birthday-floating-heart:nth-of-type(14) { left: 82%; font-size: 2rem; animation-delay: -6s; }
+        .birthday-card {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: min(100%, 460px);
+            min-height: min(92svh, 760px);
+            padding: 2rem 1.5rem;
+            text-align: center;
+        }
+        .birthday-stagger {
+            opacity: 0;
+            animation-fill-mode: both;
+        }
+        .birthday-kicker { animation: revealKicker .95s cubic-bezier(.16,1,.3,1) 3.15s both; }
+        .birthday-cake-scene { animation: revealCake 1.25s cubic-bezier(.16,1,.3,1) 3.65s both; }
+        .birthday-title-step { animation: revealBirthdayTitle 1.15s cubic-bezier(.16,1,.3,1) 5.05s both; }
+        .birthday-wish-step { animation: revealWish 1s cubic-bezier(.16,1,.3,1) 5.95s both; }
+        .birthday-hint-step { animation: revealSpark 1s cubic-bezier(.16,1,.3,1) 6.7s both; }
+        .birthday-button-step { animation: revealButton 1.05s cubic-bezier(.16,1,.3,1) 7.35s both; }
+        .birthday-cake-scene {
+            position: relative;
+            isolation: isolate;
+            height: 250px;
+            margin: 1rem auto 1.5rem;
+            filter: drop-shadow(0 12px 12px rgba(157, 23, 77, .16));
+        }
+        .birthday-cake-scene::after {
+            content: '';
+            position: absolute;
+            z-index: -2;
+            width: 220px;
+            height: 150px;
+            top: 36px;
+            border-radius: 50%;
+            background: rgba(244, 114, 182, .34);
+            filter: blur(35px);
+            animation: cakeAura 2.8s ease-in-out infinite alternate;
+        }
+        .birthday-cake-plate {
+            position: absolute;
+            z-index: 1;
+            left: 50%;
+            bottom: 0;
+            width: min(290px, 88vw);
+            height: 24px;
+            border: 3px solid #fff;
+            border-radius: 50%;
+            background: linear-gradient(180deg, #fff 0%, #fce7f3 58%, #e9a8c8 100%);
+            box-shadow: 0 7px 10px rgba(120, 35, 75, .2), inset 0 2px 4px white;
+            transform: translateX(-50%);
+            animation: plateShine 3.2s ease-in-out infinite;
+        }
+        .birthday-candle {
+            position: absolute;
+            z-index: 5;
+            left: 50%;
+            bottom: 142px;
+            width: 18px;
+            height: 58px;
+            border: 2px solid rgba(255,255,255,.9);
+            border-radius: 7px 7px 3px 3px;
+            background: repeating-linear-gradient(135deg, #fff 0 8px, #f472b6 8px 15px);
+            box-shadow: inset -3px 0 5px rgba(157,23,77,.18), 0 3px 7px rgba(120,35,75,.2);
+            transform: translateX(-50%);
+            animation: candleRise .8s cubic-bezier(.2,.75,.25,1) 2s both;
+        }
+        .birthday-candle::after {
+            content: '';
+            position: absolute;
+            z-index: -1;
+            left: 50%;
+            top: -43px;
+            width: 58px;
+            height: 68px;
+            border-radius: 50%;
+            background: radial-gradient(ellipse, rgba(255,178,68,.32), rgba(255,135,86,.12) 45%, transparent 72%);
+            filter: blur(5px);
+            transform: translateX(-50%);
+            animation: flameHalo 1.5s ease-in-out infinite alternate;
+        }
+        .birthday-candle::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: -6px;
+            width: 2px;
+            height: 8px;
+            border-radius: 2px;
+            background: #67443d;
+            transform: translateX(-50%);
+        }
+        .birthday-flame {
+            position: absolute;
+            z-index: 6;
+            left: 50%;
+            top: -31px;
+            width: 20px;
+            height: 30px;
+            border-radius: 55% 45% 55% 45%;
+            background: radial-gradient(ellipse at 50% 72%, #fff9b0 0 18%, #ffb52e 38%, #fb5b24 72%, transparent 74%);
+            filter: drop-shadow(0 0 10px rgba(255, 157, 34, .95));
+            transform: translateX(-50%) rotate(3deg);
+            transform-origin: 50% 90%;
+            animation: candleFlicker .7s ease-in-out infinite alternate;
+        }
+        .birthday-cake-top {
+            position: absolute;
+            z-index: 3;
+            left: 50%;
+            bottom: 78px;
+            display: grid;
+            place-items: center;
+            width: 174px;
+            height: 70px;
+            border: 3px solid #fff;
+            border-radius: 48% 48% 15px 15px / 42% 42% 12px 12px;
+            background: linear-gradient(100deg, #e883b6 0%, #ffd9eb 18%, #f7a4ca 52%, #ffe3f0 78%, #d96c9f 100%);
+            box-shadow: inset 0 8px 12px rgba(255,255,255,.55), inset 0 -8px 12px rgba(157,23,77,.15), 0 3px 4px rgba(120,35,75,.18);
+            color: #9d174d;
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.15rem;
+            line-height: 1;
+            text-shadow: 0 1px 0 white;
+            transform: translateX(-50%);
+        }
+        .birthday-cake-top::before {
+            content: '';
+            position: absolute;
+            left: -3px;
+            right: -3px;
+            top: -8px;
+            height: 20px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            background: radial-gradient(ellipse at 50% 35%, #fffdfd, #ffeaf4 70%, #f5bad5);
+            box-shadow: 0 3px 5px rgba(157,23,77,.15);
+        }
+        .birthday-cake-top span { position: relative; z-index: 1; margin-top: 8px; }
+        .birthday-cake-bottom {
+            position: absolute;
+            z-index: 2;
+            left: 50%;
+            bottom: 12px;
+            width: min(250px, 78vw);
+            height: 76px;
+            border: 3px solid #fff;
+            border-radius: 15px 15px 30px 30px;
+            background: linear-gradient(90deg, #c94883 0%, #f18abd 12%, #db4f91 28%, #f783b7 52%, #c83f79 78%, #f08aba 100%);
+            box-shadow: inset 0 12px 12px rgba(255,255,255,.24), inset 0 -12px 14px rgba(111,18,61,.22), 0 5px 8px rgba(120,35,75,.16);
+            transform: translateX(-50%);
+        }
+        .birthday-cake-bottom::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: -3px;
+            right: -3px;
+            height: 22px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            background: linear-gradient(180deg, #fffdfd, #ffe3ef 76%, #f4b4d0);
+            box-shadow: 0 3px 5px rgba(157,23,77,.14);
+        }
+        .birthday-cake-bottom::after {
+            content: '♡   ♡   ♡   ♡   ♡';
+            position: absolute;
+            inset: 30px 0 auto;
+            color: #fff5fa;
+            font-size: 1.15rem;
+            letter-spacing: .12rem;
+            text-align: center;
+            text-shadow: 0 1px 3px rgba(157,23,77,.25);
+        }
+        .birthday-cake-top {
+            animation: icingGlow 2.2s ease-in-out infinite alternate;
+        }
+        .birthday-cake-bottom {
+            background-size: 200% 100%;
+            animation: cakeGloss 4s ease-in-out infinite alternate;
+        }
+        .birthday-message {
+            animation: revealBirthdayTitle 1.15s cubic-bezier(.16,1,.3,1) 5.05s both,
+                       messageGlow 2.5s ease-in-out 6.2s infinite alternate;
+        }
+        @keyframes birthdayBackdrop { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes sparkleFieldIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes openingTitleSequence {
+            0% { opacity: 0; transform: translate(-50%, -46%) scale(.72); filter: blur(18px); letter-spacing: .04em; }
+            18% { opacity: 1; transform: translate(-50%, -50%) scale(1.04); filter: blur(0); }
+            28%, 68% { opacity: 1; transform: translate(-50%, -50%) scale(1); filter: blur(0); }
+            100% { opacity: 0; transform: translate(-50%, -56%) scale(1.16); filter: blur(14px); }
+        }
+        @keyframes starTwinkle {
+            0%, 100% { opacity: .12; transform: scale(.45) rotate(0deg); }
+            45% { opacity: 1; transform: scale(1.25) rotate(45deg); }
+            65% { opacity: .55; transform: scale(.8) rotate(90deg); }
+        }
+        @keyframes shootingStar {
+            0%, 12%, 100% { opacity: 0; transform: translate(0, 0) rotate(-35deg) scaleX(.2); }
+            16% { opacity: 1; }
+            28% { opacity: 0; transform: translate(-55vw, 40vh) rotate(-35deg) scaleX(1); }
+        }
+        @keyframes heartDrift {
+            0% { opacity: 0; transform: translate3d(0, 0, 0) rotate(-15deg) scale(.6); }
+            15% { opacity: .75; }
+            85% { opacity: .65; }
+            100% { opacity: 0; transform: translate3d(35px, -115vh, 0) rotate(25deg) scale(1.25); }
+        }
+        @keyframes cakeAura {
+            from { opacity: .45; transform: scale(.82); }
+            to { opacity: .95; transform: scale(1.12); }
+        }
+        @keyframes icingGlow {
+            from { filter: drop-shadow(0 0 3px rgba(255,255,255,.25)); }
+            to { filter: drop-shadow(0 0 14px rgba(255,255,255,.85)); }
+        }
+        @keyframes cakeGloss {
+            from { background-position: 0% 50%; }
+            to { background-position: 100% 50%; }
+        }
+        @keyframes plateShine {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.12); }
+        }
+        @keyframes revealKicker {
+            0% { opacity: 0; transform: translateY(-28px) rotateX(70deg) scale(.72); filter: blur(9px); letter-spacing: .55em; }
+            65% { opacity: 1; transform: translateY(5px) rotateX(-8deg) scale(1.08); filter: blur(0); }
+            100% { opacity: 1; transform: translateY(0) rotateX(0) scale(1); filter: blur(0); letter-spacing: .2em; }
+        }
+        @keyframes revealCake {
+            0% { opacity: 0; transform: translateY(90px) scale(.42) rotate(-18deg); filter: blur(10px); }
+            68% { opacity: 1; transform: translateY(-12px) scale(1.08) rotate(4deg); filter: blur(0); }
+            84% { transform: translateY(4px) scale(.97) rotate(-2deg); }
+            100% { opacity: 1; transform: translateY(0) scale(1) rotate(0); filter: blur(0); }
+        }
+        @keyframes revealBirthdayTitle {
+            0% { opacity: 0; transform: perspective(600px) rotateX(75deg) translateY(42px) scale(.7); filter: blur(12px); }
+            68% { opacity: 1; transform: perspective(600px) rotateX(-10deg) translateY(-5px) scale(1.08); filter: blur(0); }
+            84% { transform: perspective(600px) rotateX(4deg) translateY(2px) scale(.98); }
+            100% { opacity: 1; transform: perspective(600px) rotateX(0) translateY(0) scale(1); filter: blur(0); }
+        }
+        @keyframes revealWish {
+            0% { opacity: 0; transform: translateX(-55px) scale(.92); filter: blur(8px); }
+            72% { opacity: 1; transform: translateX(8px) scale(1.03); filter: blur(0); }
+            100% { opacity: 1; transform: translateX(0) scale(1); filter: blur(0); }
+        }
+        @keyframes revealSpark {
+            0% { opacity: 0; transform: scale(.35) rotate(-12deg); filter: blur(8px); }
+            65% { opacity: 1; transform: scale(1.2) rotate(4deg); filter: blur(0); }
+            100% { opacity: 1; transform: scale(1) rotate(0); filter: blur(0); }
+        }
+        @keyframes revealButton {
+            0% { opacity: 0; transform: translateY(38px) scale(.55) rotateX(35deg); filter: blur(8px); }
+            68% { opacity: 1; transform: translateY(-7px) scale(1.12) rotateX(-5deg); filter: blur(0); }
+            84% { transform: translateY(3px) scale(.97) rotateX(2deg); }
+            100% { opacity: 1; transform: translateY(0) scale(1) rotateX(0); filter: blur(0); }
+        }
+        @keyframes birthdayCardIn {
+            from { opacity: 0; transform: translateY(28px) scale(.78) rotateX(12deg); }
+            to { opacity: 1; transform: translateY(0) scale(1) rotateX(0); }
+        }
+        @keyframes candleRise {
+            from { opacity: 0; transform: translate(-50%, 16px) scale(.82); }
+            to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+        }
+        @keyframes flameHalo {
+            from { opacity: .55; transform: translateX(-50%) scale(.88); }
+            to { opacity: 1; transform: translateX(-50%) scale(1.12); }
+        }
+        @keyframes candleFlicker {
+            from { transform: translateX(-50%) rotate(-5deg) scale(.94); }
+            to { transform: translateX(-50%) rotate(5deg) scale(1.06); }
+        }
+        @keyframes messageGlow {
+            from { text-shadow: 0 0 8px rgba(244,114,182,.12); }
+            to { text-shadow: 0 0 18px rgba(244,114,182,.45); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .birthday-overlay, .birthday-card, .birthday-opening-title, .birthday-sparkles, .birthday-flame, .birthday-message, .birthday-stagger,
+            .birthday-star, .birthday-shooting-star, .birthday-floating-heart,
+            .birthday-cake-scene::after, .birthday-cake-top,
+            .birthday-cake-bottom, .birthday-cake-plate, .birthday-candle, .birthday-candle::after { animation-duration: .01ms !important; animation-delay: 0s !important; }
+        }
     </style>
 </head>
 <body class="font-handwriting">
+
+    <!-- Layar login enam digit sebelum layar pembuka -->
+    <section id="login-screen" class="login-screen fixed inset-0 z-[60] flex flex-col items-center justify-center px-6 text-white text-center">
+        <div class="mb-6 flex h-28 w-28 items-center justify-center rounded-full bg-white/20 shadow-lg ring-2 ring-white/30" aria-hidden="true">
+            <svg class="login-logo cat-logo h-24 w-24 overflow-visible" viewBox="0 0 100 125" role="img" aria-label="Kucing oren putih yang berkedip dan bergerak" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="catOrange" x1=".15" y1="0" x2=".8" y2="1">
+                        <stop offset="0" stop-color="#ffd18a"/>
+                        <stop offset=".48" stop-color="#ee9840"/>
+                        <stop offset="1" stop-color="#b95a25"/>
+                    </linearGradient>
+                    <linearGradient id="catCream" x1="0" y1="0" x2="0" y2="1">
+                        <stop stop-color="#fff8e9"/><stop offset="1" stop-color="#e8d9c9"/>
+                    </linearGradient>
+                    <radialGradient id="catEye" cx="35%" cy="28%">
+                        <stop stop-color="#536a43"/><stop offset=".55" stop-color="#253b2c"/><stop offset="1" stop-color="#101c1a"/>
+                    </radialGradient>
+                    <filter id="catShadow" x="-30%" y="-30%" width="160%" height="170%">
+                        <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+                        <feOffset dy="2"/><feComponentTransfer><feFuncA type="linear" slope=".32"/></feComponentTransfer>
+                        <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+                    </filter>
+                    <clipPath id="catFaceClip"><path d="M13 43 11 23Q10 13 20 19l14 9Q50 21 66 28l14-10q10-6 9 5l-2 22q5 28-17 39-20 12-40 0Q8 70 13 43Z"/></clipPath>
+                </defs>
+                <g id="cat-tail" filter="url(#catShadow)">
+                    <path d="M68 91q19 0 22 13 2 10-10 12-8 1-12-5 10 2 11-5 1-8-13-8Z" fill="url(#catOrange)" stroke="#bd6c34" stroke-width="2" stroke-linejoin="round"/>
+                    <path d="M77 97q7 2 8 7" fill="none" stroke="#ffd18a" stroke-width="2" stroke-linecap="round" opacity=".8"/>
+                </g>
+                <g id="cat-body" filter="url(#catShadow)">
+                    <path d="M28 76q7-10 22-10t22 10l9 34q1 10-10 11H33q-11-1-10-11Z" fill="url(#catOrange)" stroke="#bd6c34" stroke-width="1.5"/>
+                    <path d="M38 79q5-6 12-6t12 6l7 25q-8 7-19 7t-19-7Z" fill="url(#catCream)"/>
+                    <path class="cat-paw cat-wave-paw" d="M27 105q-8 7-3 13 4 4 15 2l5-2-2-9Z" fill="url(#catCream)" stroke="#d6c2af" stroke-width="1.2"/>
+                    <path class="cat-paw" d="M56 109l-2 9 5 2q11 2 15-2 5-6-3-13Z" fill="url(#catCream)" stroke="#d6c2af" stroke-width="1.2"/>
+                    <path d="M34 87q-4 10-2 17m34-17q4 10 2 17" fill="none" stroke="#ffe0ad" stroke-width="2" stroke-linecap="round" opacity=".65"/>
+                </g>
+                <g id="cat-head" filter="url(#catShadow)">
+                    <path d="M13 43 11 23Q10 13 20 19l17 11h27l16-12q10-6 9 5l-2 23q5 28-17 39-20 12-40 0Q8 70 13 43Z" fill="url(#catOrange)" stroke="#bd6c34" stroke-width="1.5"/>
+                    <path d="M16 29 15 22q0-3 4-1l11 7-8 5Z" fill="#d98269"/><path d="m72 28 11-7q4-2 4 2l-1 8-7 5Z" fill="#d98269"/>
+                    <g clip-path="url(#catFaceClip)" fill="none" stroke="#bc682e" stroke-linecap="round" opacity=".75">
+                        <path d="M38 28q-6 8-5 18M49 25q-4 10-2 20M60 28q-2 7 1 13" stroke-width="4"/>
+                        <path d="M18 43q8-4 16-1M67 42q8-4 15 0" stroke-width="3"/>
+                    </g>
+                    <path d="M18 57q-2 15 10 24 9 7 22 4 13 3 22-5 11-10 8-24-7 7-16 6-7-7-14-2-7-5-15 2-9 1-17-5Z" fill="url(#catCream)"/>
+                    <ellipse cx="31" cy="55" rx="10" ry="8" fill="url(#catEye)"/><ellipse cx="69" cy="55" rx="10" ry="8" fill="url(#catEye)"/>
+                    <ellipse cx="28" cy="52" rx="2.5" ry="2.5" fill="white"/><ellipse cx="66" cy="52" rx="2.5" ry="2.5" fill="white"/>
+                    <path class="cat-blink" d="M21 55q10-9 20 0" fill="none" stroke="#a95227" stroke-width="3" stroke-linecap="round"/>
+                    <path class="cat-blink cat-blink-right" d="M59 55q10-9 20 0" fill="none" stroke="#a95227" stroke-width="3" stroke-linecap="round"/>
+                    <ellipse cx="50" cy="67" rx="4.5" ry="3" fill="#e98f91"/>
+                    <path d="M50 70q-5 7-10 2m10-2q5 7 10 2" fill="none" stroke="#9c6257" stroke-width="1.5" stroke-linecap="round"/>
+                    <g fill="none" stroke="#f8eee3" stroke-width=".8" opacity=".9">
+                        <path d="M38 68 17 65M38 72 16 74M62 68l21-3M62 72l22 2"/>
+                    </g>
+                    <path d="M20 44q8-8 17-2M63 42q9-6 17 1" fill="none" stroke="#ffe0ad" stroke-width="2" stroke-linecap="round" opacity=".8"/>
+                </g>
+            </svg>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-semibold drop-shadow-lg">Hello, it's your birthday</h1>
+        <p class="mt-2 text-xl md:text-2xl">Masukkan password 6 digit untuk melanjutkan</p>
+
+        <form class="mt-8 flex flex-col items-center" onsubmit="window.verifyLogin(event)">
+            <label for="login-password" class="sr-only">Password 6 digit</label>
+            <input id="login-password" class="login-input w-64 rounded-lg border border-white/60 bg-white/20 px-4 py-3 text-center text-2xl text-white placeholder-white/70 shadow-lg outline-none focus:border-white focus:ring-2 focus:ring-white/50"
+                   type="password" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" placeholder="••••••" aria-describedby="login-hint login-error" required>
+            <button type="submit" class="mt-5 rounded-lg bg-white/90 px-8 py-2 text-xl font-bold text-slate-800 shadow-lg transition hover:scale-105 hover:bg-white">Masuk</button>
+        </form>
+
+        <p id="login-hint" class="mt-6 text-lg text-white/90">Hint: tanggal ulang tahun kamu (DDMMYY) 😉</p>
+        <p id="login-error" class="mt-2 min-h-7 text-lg font-bold text-rose-200" role="status" aria-live="polite"></p>
+    </section>
 
     <!-- Musik berbeda untuk layar pembuka dan halaman utama -->
     <audio id="intro-audio" src="https://raw.githubusercontent.com/muhamadsefriyandi/birthday-gift/main/intro-music.mp3" loop preload="auto"></audio>
@@ -129,39 +717,32 @@
         
         <!-- Teks Kaligrafi -->
         <div class="intro-title-backdrop text-center mb-12">
-            <h1 class="font-cursive text-7xl md:text-8xl text-black leading-tight drop-shadow-sm">Happy Birthday</h1>
-            <h2 class="font-cursive text-6xl md:text-7xl text-red-800 -mt-2 drop-shadow-sm">My Love</h2>
+            <h1 class="font-cursive text-7xl md:text-8xl text-pink-700 leading-tight drop-shadow-sm">Happy Birthday</h1>
+            <h2 class="font-cursive text-6xl md:text-7xl text-rose-800 -mt-2 drop-shadow-sm">My Love</h2>
         </div>
 
         <!-- Ilustrasi Amplop 3D (Lebih Realistis) -->
         <div class="mb-16 transform hover:scale-105 transition-transform duration-300 relative">
-            <svg width="240" height="160" viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
-                <!-- Drop Shadow Filter -->
-                <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-                    <feDropShadow dx="3" dy="8" stdDeviation="5" flood-color="#000" flood-opacity="0.3"/>
-                </filter>
-                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                    <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#be185d" flood-opacity="0.4"/>
-                </filter>
-                
-                <!-- Body Amplop (Belakang) -->
-                <rect x="10" y="15" width="180" height="105" fill="#fbcfe8" filter="url(#shadow)" rx="4"/>
-                
-                <!-- Lipatan Samping (Pink Sedang) -->
-                <polygon points="10,15 95,70 10,120" fill="#f9a8d4"/>
-                <polygon points="190,15 105,70 190,120" fill="#f9a8d4"/>
-                
-                <!-- Lipatan Bawah (Pink Agak Gelap) -->
-                <polygon points="10,120 100,65 190,120" fill="#f472b6"/>
-                
-                <!-- Lipatan Atas (Flap yang tertutup - Pink Terang) -->
-                <polygon points="10,15 100,75 190,15" fill="#fdf2f8"/>
-                <polyline points="10,15 100,75 190,15" fill="none" stroke="#fbcfe8" stroke-width="2" stroke-linejoin="round"/>
-                
-                <!-- Segel Hati / Love Logo di Tengah -->
-                <g transform="translate(86, 61) scale(1.15)">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#e11d48" filter="url(#glow)"/>
-                </g>
+            <svg width="240" height="170" viewBox="0 0 240 170" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="introEnvelopeBase" x1="0" y1="0" x2="1" y2="1">
+                        <stop stop-color="#fff7fb"/><stop offset="1" stop-color="#f2a6cd"/>
+                    </linearGradient>
+                    <linearGradient id="introEnvelopeFlap" x1="0" y1="0" x2="0.8" y2="1">
+                        <stop stop-color="#fff"/><stop offset="1" stop-color="#fce7f3"/>
+                    </linearGradient>
+                    <linearGradient id="introEnvelopeFold" x1="0" y1="0" x2="1" y2="1">
+                        <stop stop-color="#f9a8d4"/><stop offset="1" stop-color="#db2777"/>
+                    </linearGradient>
+                    <filter id="introHeartGlow" x="-60%" y="-60%" width="220%" height="220%">
+                        <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#9d174d" flood-opacity=".4"/>
+                    </filter>
+                </defs>
+                <rect x="18" y="31" width="204" height="120" rx="8" fill="url(#introEnvelopeBase)" stroke="#fbcfe8" stroke-width="2"/>
+                <path d="M20 35 120 111 220 35v112H20Z" fill="url(#introEnvelopeFold)"/>
+                <path d="M20 35 120 110 220 35 120 91Z" fill="#f472b6" opacity=".72"/>
+                <path d="M20 35 120 108 220 35 120 103Z" fill="url(#introEnvelopeFlap)" stroke="#fbcfe8" stroke-width="2" stroke-linejoin="round"/>
+                <path d="M108 92c-9-11-23 2-13 12l25 21 25-21c10-10-4-23-13-12l-12 12Z" fill="#e11d48" filter="url(#introHeartGlow)"/>
             </svg>
         </div>
 
@@ -180,10 +761,39 @@
         </div>
 
         <!-- Tombol Open (Terkunci Otomatis). Pastikan ada id="open-btn" dan kata "disabled" -->
-        <button id="open-btn" onclick="event.stopPropagation(); window.closeIntro()" disabled class="bg-gray-400 text-gray-200 rounded-full px-12 py-3 font-sans font-bold text-2xl shadow-md cursor-not-allowed transition-all opacity-70">
+        <button id="open-btn" onclick="event.stopPropagation(); window.openBirthdayCelebration()" disabled class="bg-pink-200 text-pink-400 rounded-full px-12 py-3 font-sans font-bold text-2xl shadow-md cursor-not-allowed transition-all opacity-80">
             <span class="border-b-2 border-transparent pb-1 tracking-wide">Open</span>
         </button>
     </div>
+
+    <!-- Pop-up perayaan setelah tombol Open ditekan -->
+    <section id="birthday-overlay" class="birthday-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="birthday-title">
+        <div class="birthday-sparkles" aria-hidden="true">
+            <span class="birthday-star">✦</span><span class="birthday-star">✧</span>
+            <span class="birthday-star">✦</span><span class="birthday-star">✧</span>
+            <span class="birthday-star">✦</span><span class="birthday-star">✧</span>
+            <span class="birthday-star">✦</span><span class="birthday-star">✧</span>
+            <span class="birthday-star">✦</span><span class="birthday-star">✧</span>
+            <span class="birthday-star">✦</span><span class="birthday-star">✧</span>
+            <div class="birthday-shooting-star"></div>
+            <span class="birthday-floating-heart">♥</span>
+            <span class="birthday-floating-heart">♥</span>
+        </div>
+        <p class="birthday-opening-title font-cursive" aria-hidden="true">For Someone Special</p>
+        <div class="birthday-card">
+            <p class="birthday-stagger birthday-kicker text-pink-500 text-lg font-bold tracking-[.2em] uppercase">A little celebration for you</p>
+            <div class="birthday-cake-scene birthday-stagger" aria-label="Kue ulang tahun 25th dengan lilin menyala">
+                <div class="birthday-cake-plate"></div>
+                <div class="birthday-candle"><span id="birthday-flame" class="birthday-flame"></span></div>
+                <div class="birthday-cake-top"><span>25<sup class="text-base">th</sup></span></div>
+                <div class="birthday-cake-bottom"></div>
+            </div>
+            <h2 id="birthday-title" class="birthday-stagger birthday-title-step birthday-message font-cursive text-6xl md:text-7xl text-pink-700">Happy Birthday, Sayang!</h2>
+            <p class="birthday-stagger birthday-wish-step mt-3 text-xl text-pink-900">Semoga semua doa dan hal baik selalu menyertaimu 💖</p>
+            <p id="candle-hint" class="birthday-stagger birthday-hint-step mt-4 text-sm font-bold text-pink-500">Lilin spesialmu terus menyala ✨</p>
+            <button type="button" onclick="window.closeBirthdayCelebration()" class="birthday-stagger birthday-button-step mt-6 rounded-full bg-pink-600 px-8 py-3 text-lg font-bold text-white shadow-lg transition hover:scale-105 hover:bg-pink-700">Lanjutkan 💕</button>
+        </div>
+    </section>
 
     <!-- ========================================== -->
     <!-- KONTEN UTAMA (Desktop Layout) -->
@@ -209,19 +819,19 @@
                         
                         <!-- Tanggal (Oktober 2026 mulai dari Kamis) -->
                         <div></div><div></div><div></div><div></div> <!-- 4 slot kosong di awal -->
-                        <div>1</div><div>2</div><div>3</div>
-                        <div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div>10</div>
-                        <div>11</div><div>12</div><div>13</div><div>14</div>
+                        <span class="calendar-day" data-calendar-day="1">1</span><span class="calendar-day" data-calendar-day="2">2</span><span class="calendar-day" data-calendar-day="3">3</span>
+                        <span class="calendar-day" data-calendar-day="4">4</span><span class="calendar-day" data-calendar-day="5">5</span><span class="calendar-day" data-calendar-day="6">6</span><span class="calendar-day" data-calendar-day="7">7</span><span class="calendar-day" data-calendar-day="8">8</span><span class="calendar-day" data-calendar-day="9">9</span><span class="calendar-day" data-calendar-day="10">10</span>
+                        <span class="calendar-day" data-calendar-day="11">11</span><span class="calendar-day" data-calendar-day="12">12</span><span class="calendar-day" data-calendar-day="13">13</span><span class="calendar-day" data-calendar-day="14">14</span>
                         
-                        <!-- Highlight Tanggal 15 -->
+                        <!-- Highlight bergerak dan berhenti di tanggal 15 -->
                         <div class="relative flex justify-center items-center cursor-pointer group" onclick="window.openModal('modal-cake')" title="Klik aku!">
-                            <span class="absolute z-10 text-white font-bold text-2xl group-hover:scale-110 transition">15</span>
-                            <svg class="heartbeat text-pink-500 w-12 h-12 fill-current drop-shadow-md" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                            <span class="calendar-day absolute z-10 font-bold text-2xl group-hover:scale-110" data-calendar-day="15">15</span>
+                            <svg id="calendar-heart" class="calendar-heart text-pink-500 w-12 h-12 fill-current drop-shadow-md" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                         </div>
                         
-                        <div>16</div><div>17</div>
-                        <div>18</div><div>19</div><div>20</div><div>21</div><div>22</div><div>23</div><div>24</div>
-                        <div>25</div><div>26</div><div>27</div><div>28</div><div>29</div><div>30</div><div>31</div>
+                        <span class="calendar-day" data-calendar-day="16">16</span><span class="calendar-day" data-calendar-day="17">17</span>
+                        <span class="calendar-day" data-calendar-day="18">18</span><span class="calendar-day" data-calendar-day="19">19</span><span class="calendar-day" data-calendar-day="20">20</span><span class="calendar-day" data-calendar-day="21">21</span><span class="calendar-day" data-calendar-day="22">22</span><span class="calendar-day" data-calendar-day="23">23</span><span class="calendar-day" data-calendar-day="24">24</span>
+                        <span class="calendar-day" data-calendar-day="25">25</span><span class="calendar-day" data-calendar-day="26">26</span><span class="calendar-day" data-calendar-day="27">27</span><span class="calendar-day" data-calendar-day="28">28</span><span class="calendar-day" data-calendar-day="29">29</span><span class="calendar-day" data-calendar-day="30">30</span><span class="calendar-day" data-calendar-day="31">31</span>
                     </div>
                 </div>
             </div>
@@ -415,6 +1025,55 @@
         let videoIsPlaying = false;
         let backgroundPausedByMedia = false;
 
+        function verifyLogin(event) {
+            event.preventDefault();
+            const passwordInput = document.getElementById('login-password');
+            const errorMessage = document.getElementById('login-error');
+            const loginScreen = document.getElementById('login-screen');
+
+            if (passwordInput && passwordInput.value === '151001') {
+                errorMessage.textContent = '';
+                loginScreen.classList.add('login-hidden');
+
+                const reveal = document.createElement('div');
+                reveal.className = 'envelope-reveal';
+                reveal.setAttribute('aria-hidden', 'true');
+                reveal.innerHTML = `
+                    <svg viewBox="0 0 240 170" role="presentation" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="revealEnvelopeBase" x1="0" y1="0" x2="1" y2="1">
+                                <stop stop-color="#fff7fb"/><stop offset="1" stop-color="#f2a6cd"/>
+                            </linearGradient>
+                            <linearGradient id="revealEnvelopeFlap" x1="0" y1="0" x2="0.8" y2="1">
+                                <stop stop-color="#fff"/><stop offset="1" stop-color="#fce7f3"/>
+                            </linearGradient>
+                            <linearGradient id="revealEnvelopeFold" x1="0" y1="0" x2="1" y2="1">
+                                <stop stop-color="#f9a8d4"/><stop offset="1" stop-color="#db2777"/>
+                            </linearGradient>
+                            <filter id="revealHeartGlow" x="-60%" y="-60%" width="220%" height="220%">
+                                <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#9d174d" flood-opacity=".4"/>
+                            </filter>
+                        </defs>
+                        <rect x="18" y="31" width="204" height="120" rx="8" fill="url(#revealEnvelopeBase)" stroke="#fbcfe8" stroke-width="2"/>
+                        <path d="M20 35 120 111 220 35v112H20Z" fill="url(#revealEnvelopeFold)"/>
+                        <path d="M20 35 120 110 220 35 120 91Z" fill="#f472b6" opacity=".72"/>
+                        <path d="M20 35 120 108 220 35 120 103Z" fill="url(#revealEnvelopeFlap)" stroke="#fbcfe8" stroke-width="2" stroke-linejoin="round"/>
+                        <path d="M108 92c-9-11-23 2-13 12l25 21 25-21c10-10-4-23-13-12l-12 12Z" fill="#e11d48" filter="url(#revealHeartGlow)"/>
+                    </svg>`;
+                document.body.appendChild(reveal);
+
+                setTimeout(() => {
+                    loginScreen.remove();
+                    reveal.remove();
+                }, 1550);
+            } else {
+                errorMessage.textContent = 'Password belum tepat, coba lagi ya 💗';
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
+        }
+        window.verifyLogin = verifyLogin;
+
         function pauseBackgroundForMedia() {
             if (backgroundAudio && !backgroundAudio.paused) {
                 backgroundPausedByMedia = true;
@@ -499,6 +1158,61 @@
             }, 800);
         }
         window.closeIntro = closeIntro;
+
+        function openBirthdayCelebration() {
+            closeIntro();
+            const celebration = document.getElementById('birthday-overlay');
+            if (!celebration) return;
+
+            celebration.classList.add('hidden');
+            void celebration.offsetWidth;
+            celebration.classList.remove('hidden');
+        }
+        window.openBirthdayCelebration = openBirthdayCelebration;
+
+        let calendarDateTimer;
+
+        function startCalendarDateAnimation() {
+            const days = Array.from(document.querySelectorAll('[data-calendar-day]'))
+                .filter(day => Number(day.dataset.calendarDay) <= 15)
+                .sort((a, b) => Number(a.dataset.calendarDay) - Number(b.dataset.calendarDay));
+            const heart = document.getElementById('calendar-heart');
+            if (!days.length) return;
+
+            days.forEach(day => day.classList.remove('is-counting', 'is-final'));
+            if (heart) heart.classList.remove('is-visible');
+
+            const finishOnFifteen = () => {
+                const fifteenth = days.find(day => Number(day.dataset.calendarDay) === 15);
+                if (fifteenth) fifteenth.classList.add('is-final');
+                if (heart) heart.classList.add('is-visible');
+            };
+
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                finishOnFifteen();
+                return;
+            }
+
+            let current = 0;
+            days[current].classList.add('is-counting');
+            calendarDateTimer = setInterval(() => {
+                days[current].classList.remove('is-counting');
+                current += 1;
+                if (current >= days.length) {
+                    clearInterval(calendarDateTimer);
+                    finishOnFifteen();
+                    return;
+                }
+                days[current].classList.add('is-counting');
+            }, 700);
+        }
+
+        function closeBirthdayCelebration() {
+            const celebration = document.getElementById('birthday-overlay');
+            if (celebration) celebration.classList.add('hidden');
+            startCalendarDateAnimation();
+        }
+        window.closeBirthdayCelebration = closeBirthdayCelebration;
 
         const overlay = document.getElementById('modal-overlay');
         const sections = document.querySelectorAll('.modal-section');
@@ -623,8 +1337,8 @@
                 const openBtn = document.getElementById('open-btn');
                 if (openBtn) {
                     openBtn.disabled = false;
-                    openBtn.classList.remove('bg-gray-400', 'text-gray-200', 'cursor-not-allowed', 'opacity-70');
-                    openBtn.classList.add('bg-black', 'text-white', 'hover:bg-gray-800', 'hover:scale-105', 'active:scale-95', 'shadow-xl', 'cursor-pointer');
+                    openBtn.classList.remove('bg-pink-200', 'text-pink-400', 'cursor-not-allowed', 'opacity-80');
+                    openBtn.classList.add('bg-pink-600', 'text-white', 'hover:bg-pink-700', 'hover:scale-105', 'active:scale-95', 'shadow-xl', 'cursor-pointer');
                     
                     // Tambahkan garis bawah putih pada teks Open
                     const spanInside = openBtn.querySelector('span');
